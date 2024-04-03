@@ -30,7 +30,7 @@ def generate_response(txt):
 
 # Set Title
 st.set_page_config(page_title='Text Summarization App')
-st.title('📌 Text Summarization App')
+st.title('🔖 Text Summarization App')
 
 # Take input text
 txt_input = st.text_area('Enter your text', '', height=200)
