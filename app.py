@@ -1,5 +1,21 @@
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: light
+#       format_version: '1.5'
+#       jupytext_version: 1.16.1
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
+# ---
+
+# +
 # Installing required libraries
-# !pip install -r requirements.txt
+# # !pip install -r requirements.txt
+# -
 
 # Importing required libraries
 import streamlit as st
@@ -8,9 +24,10 @@ from langchain.docstore.document import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 
-def generate_response(txt):
+
+def generate_response(txt, api_key):
     # 1. Instantiate the LLM model
-    llm = OpenAI(temperature=0, openai_api_key=openai_api_key)
+    llm = OpenAI(temperature=0, openai_api_key=api_key)
     
     
     # 2. Split the input text using textsplitter
@@ -25,12 +42,15 @@ def generate_response(txt):
     # 4. Text summarization
     chain = load_summarize_chain(llm, chain_type='map_reduce')
     return chain.run(docs)
-    
+
+
+
+# +
 # Building the streamlit web interface
 
 # Set Title
 st.set_page_config(page_title='Text Summarization App')
-st.title('🔖 Text Summarization App')
+st.title('🔖Text Summarization App')
 
 # Take input text
 txt_input = st.text_area('Enter your text', '', height=200)
@@ -42,12 +62,14 @@ with st.form('summarize_form', clear_on_submit=True): # Clears Open API key ente
     submitted = st.form_submit_button('Submit')
     # Checking if user has entered api key and clicked on submit
     if submitted and openai_api_key.startswith('sk-'):
-        with st.spinner('Calculating...'):
-            response = generate_response(txt_input)
+        with st.spinner('Summarizing...'):
+            response = generate_response(txt_input, openai_api_key)
             result.append(response)
             del openai_api_key # deleting the key for security 
 
 # Printing the output
 if len(result):
     st.info(response)
-    
+# -
+
+
